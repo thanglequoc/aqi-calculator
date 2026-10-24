@@ -6,7 +6,7 @@
 </h1>
 
 # Java AQI Calculator
-[![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.github.thanglequoc/aqi-calculator/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.github.thanglequoc/aqi-calculator)
+[![Maven Central](https://img.shields.io/maven-central/v/io.github.thanglequoc/aqi-calculator)](https://central.sonatype.com/artifact/io.github.thanglequoc/aqi-calculator)
 [![CodeFactor](https://www.codefactor.io/repository/github/thanglequoc/aqi-calculator/badge)](https://www.codefactor.io/repository/github/thanglequoc/aqi-calculator)
 
 Are you also looking for Node version ? [![npm version](https://badge.fury.io/js/aqi-bot.svg)](https://badge.fury.io/js/aqi-bot)
@@ -34,26 +34,40 @@ This project is intended to community target for free use. The author is not ass
 
 
 ## Installation
+> **Coordinates changed in 1.3.3:** the artifact is now published as
+> `io.github.thanglequoc:aqi-calculator`. The Java package remains
+> `com.thanglequoc.aqicalculator`, so existing imports do not change.
+>
+> **Java 17+ is required starting with 1.3.3.** The AQI calculation behavior is unchanged
+> from 1.3.2, but the build now targets Java 17.
+
 ## AQI Calculator as a standalone app
-If you prefer to use this library as a standalone REST API app, see [AQI Calculator as a standalone app](https://github.com/ThangLeQuoc/aqi-calculator/blob/master/README.md#aqi-calculator-as-a-standalone-app)
+If you prefer to use this library as a standalone REST API app, see [AQI Calculator as a standalone app](https://github.com/thanglequoc/aqi-calculator/blob/master/README.md#aqi-calculator-as-a-standalone-app)
 
 ### With Maven
 ```
-<!-- https://mvnrepository.com/artifact/com.github.thanglequoc/aqi-calculator -->
+<!-- https://mvnrepository.com/artifact/io.github.thanglequoc/aqi-calculator -->
 <dependency>
-    <groupId>com.github.thanglequoc</groupId>
+    <groupId>io.github.thanglequoc</groupId>
     <artifactId>aqi-calculator</artifactId>
-    <version>1.3.2</version>
+    <version>1.3.3</version>
 </dependency>
 ```
 ### With Gradle
 ```
-// https://mvnrepository.com/artifact/com.github.thanglequoc/aqi-calculator
-implementation group: 'com.github.thanglequoc', name: 'aqi-calculator', version: '1.3.2'
+// https://mvnrepository.com/artifact/io.github.thanglequoc/aqi-calculator
+implementation group: 'io.github.thanglequoc', name: 'aqi-calculator', version: '1.3.3'
 ```
-Or for other build tools like SBT, Ivy,.. you may find it on [Maven Central Repository](https://mvnrepository.com/artifact/com.github.thanglequoc/aqi-calculator/1.3.2)
-### Using Plug-n-play jar file:
-Grab the target jar in `target-jar` folder and add the jar to your project.
+Or for other build tools like SBT, Ivy,.. you may find it on [Maven Central Repository](https://mvnrepository.com/artifact/io.github.thanglequoc/aqi-calculator/1.3.3)
+### Building from source
+JDK 17 or newer is required. The Maven wrapper is included, so Maven does not need to be installed.
+
+```
+./mvnw clean verify
+```
+
+The built jar is in `target/aqi-calculator-<version>.jar`. Release jars are attached to
+[GitHub Releases](https://github.com/thanglequoc/aqi-calculator/releases).
 
 ## Quick Usage
 #### For Regular AQI Calculation
@@ -142,7 +156,7 @@ result.getAQI();
 >56
 
 ### Customize AQI Messages
-The default text from AQI result is in **English**. However, you can easily override these messages in your own language. Just download the [template files](https://github.com/ThangLeQuoc/aqi-calculator/tree/master/src/main/resources/AQIresource) and make change on your own
+The default text from AQI result is in **English**. However, you can easily override these messages in your own language. Just download the [template files](https://github.com/thanglequoc/aqi-calculator/tree/master/src/main/resources/AQIresource) and make change on your own
 
 Allowed customized messages resources:
 - General Messages 
@@ -193,7 +207,7 @@ General Messages contains the category, meaning and color
   "color": "<<Text in your language>>"
 }] 
 ```
-Download [General Messages Resource File](https://github.com/ThangLeQuoc/aqi-calculator/blob/master/src/main/resources/AQIresource/aqi-general-messages.json) and custom it on your own. Then set this file path with  `withGeneralMessageResourcePath(<path_to_your_file>)`
+Download [General Messages Resource File](https://github.com/thanglequoc/aqi-calculator/blob/master/src/main/resources/AQIresource/aqi-general-messages.json) and custom it on your own. Then set this file path with  `withGeneralMessageResourcePath(<path_to_your_file>)`
 ```
 AQICustomSettings mySettings = new AQICustomSettings()
 	.withCustomMessagesMode(true)
@@ -208,7 +222,7 @@ Sensitive Groups File contains list of pollutant's sensitive groups
     "sensitiveGroups": "<<Text in your language>>"
 }]
 ```
-Download [Sensitive Groups Resource File](https://github.com/ThangLeQuoc/aqi-calculator/blob/master/src/main/resources/AQIresource/aqi-sensitive-groups.json) and custom it on your own. Then set this file path with `withSensitiveGroupsResourcePath(<path_to_your_file>)`
+Download [Sensitive Groups Resource File](https://github.com/thanglequoc/aqi-calculator/blob/master/src/main/resources/AQIresource/aqi-sensitive-groups.json) and custom it on your own. Then set this file path with `withSensitiveGroupsResourcePath(<path_to_your_file>)`
 ```
 AQICustomSettings mySettings = new AQICustomSettings()
 	.withCustomMessagesMode(true)
@@ -232,7 +246,7 @@ Specific Messages contains Health Effects Statements and Cautionary Statements f
 }]
 ```
 
-Download [Specific Messages Resource File](https://github.com/ThangLeQuoc/aqi-calculator/blob/master/src/main/resources/AQIresource/aqi-specific-messages.json) and custom it on your own. Then set this file path with `withSpecificMessageResourcePath(<path_to_your_file>)`
+Download [Specific Messages Resource File](https://github.com/thanglequoc/aqi-calculator/blob/master/src/main/resources/AQIresource/aqi-specific-messages.json) and custom it on your own. Then set this file path with `withSpecificMessageResourcePath(<path_to_your_file>)`
 ```
 AQICustomSettings mySettings = new AQICustomSettings()
 	.withCustomMessagesMode(true)
@@ -244,7 +258,7 @@ Reset the calculator to default messages path settings with `calculator.resetDef
 
 
 ## AQI Calculator as a standalone app
-There is a [AQI Calculator Spring Boot project](https://github.com/ThangLeQuoc/aqi-calculator-spring) built upon this library to make it easy to get it up and running
+There is a [AQI Calculator Spring Boot project](https://github.com/thanglequoc/aqi-calculator-spring) built upon this library to make it easy to get it up and running
 ### As Docker container
 Fear of Java, Spring Boot, or maybe you're just too lazy to install them.  
 With [Docker](https://www.docker.com/), it's super easy to get the container up and running without installing Java on your local machine. You don't need to know Java or Spring  
@@ -257,9 +271,9 @@ Run the container with a specified port on your machine (e.g: 8080) to the appli
 > docker run --name=aqi-calculator -p 8080:8080 thanglequoc/aqi-calculator-spring-boot
 
 ### As Spring Boot project
-Checkout this [AQI Calculator Spring Boot repository](https://github.com/ThangLeQuoc/aqi-calculator-spring) and run it
+Checkout this [AQI Calculator Spring Boot repository](https://github.com/thanglequoc/aqi-calculator-spring) and run it
 
-See the document of [AQI Calculator Spring Boot repo](https://github.com/ThangLeQuoc/aqi-calculator-spring) for API usage
+See the document of [AQI Calculator Spring Boot repo](https://github.com/thanglequoc/aqi-calculator-spring) for API usage
 
 
 # AQI Calculation Tutorial
@@ -321,11 +335,17 @@ I am have no idea why the section **Health Effects Statements** section is not p
 ###### Demonstration images for NowCast in this tutorial are from [US EPA NowCast Overview](https://www3.epa.gov/airnow/ani/pm25_aqi_reporting_nowcast_overview.pdf) document
 
 
+## Releasing
+
+Maintainers: see [`development/RELEASE_SETUP.md`](development/RELEASE_SETUP.md) for the one-time
+Maven Central/JReleaser setup and the release checklist. Releases are published from the
+**Release - Publish to Maven Central** GitHub Actions workflow.
+
 #### Contributors & Supports
 Without these great contribution from these guys, this repository might not be as it is today. I would like to express my gratitude to
 
 Marcus Hylton - US EPA Airnow Specialist  
-[Code Contributors](https://github.com/ThangLeQuoc/aqi-calculator/graphs/contributors)
+[Code Contributors](https://github.com/thanglequoc/aqi-calculator/graphs/contributors)
 
 Proudly powered by IntelliJ IDEA from [JetBrains]( https://www.jetbrains.com/?from=aqi-calculator) for open source project
 <h1 align="center">

@@ -1,4 +1,11 @@
+### Build output ###
 target/
+build/
+.gradle/
+out/
+bin/
+
+### Maven ###
 pom.xml.tag
 pom.xml.releaseBackup
 pom.xml.versionsBackup
@@ -8,8 +15,24 @@ dependency-reduced-pom.xml
 buildNumber.properties
 .mvn/timing.properties
 
-\.vscode/settings\.json
+### IDE ###
 .classpath
-.settings
+.settings/
 .project
-.idea
+.idea/
+*.iml
+*.iws
+*.ipr
+.vscode/
+
+### OS ###
+.DS_Store
+
+### Secrets & credentials ###
+.env
+.env.*
+!.env.example
+secret_key.asc
+*.asc
+*.gpg
+*.pem
