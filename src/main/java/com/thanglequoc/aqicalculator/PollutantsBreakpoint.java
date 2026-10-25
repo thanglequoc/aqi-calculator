@@ -10,7 +10,7 @@ import java.util.List;
  * <tt>PollutantBreakpoint</tt> in this list represent <b>breakpoint</b> of a
  * pollutant code
  *
- * @author ThangLeQuoc
+ * @author thanglequoc
  */
 class PollutantsBreakpoint {
     

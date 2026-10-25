@@ -4,7 +4,7 @@ package com.thanglequoc.aqicalculator;
  * Object to store information for a specific pollutant code at different AQI
  * level
  *
- * @author ThangLeQuoc
+ * @author thanglequoc
  */
 class SpecificAQILevelMessage {
     

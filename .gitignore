@@ -28,6 +28,9 @@ buildNumber.properties
 ### OS ###
 .DS_Store
 
+### Development notes ###
+development/
+
 ### Secrets & credentials ###
 .env
 .env.*

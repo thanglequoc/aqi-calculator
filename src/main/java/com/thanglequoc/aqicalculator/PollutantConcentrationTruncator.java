@@ -5,8 +5,8 @@ package com.thanglequoc.aqicalculator;
  * pollutant based on <b>US EPA</b> rule
  * <p>
  *
- * @author ThangLeQuoc
- * @see <a href="https://github.com/ThangLeQuoc/aqi-calculator"> AQI Calculator
+ * @author thanglequoc
+ * @see <a href="https://github.com/thanglequoc/aqi-calculator"> AQI Calculator
  * Guide</a> , section <b>AQI Calculation Turtorial </b>
  */
 class PollutantConcentrationTruncator {

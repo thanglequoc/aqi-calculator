@@ -6,7 +6,7 @@ package com.thanglequoc.aqicalculator;
  * <tt>AQICalculator</tt> object to calculate the AQI, which will then represent
  * NowCast AQI
  *
- * @author ThangLeQuoc
+ * @author thanglequoc
  */
 class NowCastCalculator {
     

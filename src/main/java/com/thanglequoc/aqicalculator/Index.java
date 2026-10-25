@@ -7,7 +7,7 @@ import com.fasterxml.jackson.databind.JsonNode;
  * index</i> (<b>I-low</b>) of a corresponding range in
  * <tt>PollutantBreakpoint</tt> of a pollutant
  *
- * @author ThangLeQuoc
+ * @author thanglequoc
  */
 class Index {
     

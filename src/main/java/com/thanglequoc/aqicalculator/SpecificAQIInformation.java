@@ -5,7 +5,7 @@ import java.util.List;
 /**
  * Object that hold a list of <b>SpecificAQILevelMessage</b> for a pollutant
  *
- * @author ThangLeQuoc
+ * @author thanglequoc
  */
 class SpecificAQIInformation {
     
