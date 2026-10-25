@@ -3,10 +3,10 @@ package com.thanglequoc.aqicalculator.aqi;
 import com.thanglequoc.aqicalculator.AQICalculator;
 import com.thanglequoc.aqicalculator.AQIResult;
 import com.thanglequoc.aqicalculator.Pollutant;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class AQICalculatorTest {
     
@@ -14,7 +14,7 @@ public class AQICalculatorTest {
     
     private Pollutant pollutant;
     
-    @Before
+    @BeforeEach
     public void begin() {
         calculator = AQICalculator.getAQICalculatorInstance();
     }

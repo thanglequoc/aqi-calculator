@@ -1,0 +1,42 @@
+project:
+  name: aqi-calculator
+  authors:
+    - thanglequoc
+  maintainers:
+    - thanglequoc
+  license: Apache-2.0
+  links:
+    homepage: https://github.com/thanglequoc/aqi-calculator
+  description: A Java library for calculating the US EPA Air Quality Index (AQI) and NowCast AQI
+  longDescription: |
+    AQI Calculator is a Java library for calculating the US EPA Air Quality Index (AQI)
+    from pollutant concentrations. It supports PM2.5, PM10, O3, CO, SO2, and NO2,
+    regular AQI and NowCast calculations, and customizable AQI messages.
+
+release:
+  github:
+    owner: thanglequoc
+    name: aqi-calculator
+    overwrite: false
+    releaseNotes:
+      enabled: true
+
+deploy:
+  maven:
+    mavenCentral:
+      sonatype:
+        active: RELEASE
+        url: https://central.sonatype.com/api/v1/publisher
+        username: ${SONATYPE_USERNAME}
+        password: ${SONATYPE_PASSWORD}
+        authorization: BEARER
+        sign: true
+        stagingRepositories:
+          - target/staging-deploy
+
+signing:
+  active: RELEASE
+  pgp:
+    active: RELEASE
+    armored: true
+    mode: MEMORY

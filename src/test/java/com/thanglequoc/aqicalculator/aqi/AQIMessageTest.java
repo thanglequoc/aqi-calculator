@@ -4,12 +4,12 @@ import com.thanglequoc.aqicalculator.AQICalculator;
 import com.thanglequoc.aqicalculator.AQICustomSettings;
 import com.thanglequoc.aqicalculator.AQIResult;
 import com.thanglequoc.aqicalculator.Pollutant;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class AQIMessageTest {
     AQICalculator calculator;
@@ -18,7 +18,7 @@ public class AQIMessageTest {
     static String INVALID_GENERAL_MESSAGE = "Invalid pollutant concentration range for calculation";
     static String NOT_APPLICABLE = "N/A";
     
-    @Before
+    @BeforeEach
     public void begin() throws IOException, Exception {
         calculator = AQICalculator.getAQICalculatorInstance();
     }

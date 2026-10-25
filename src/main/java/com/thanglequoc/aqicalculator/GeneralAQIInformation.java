@@ -4,7 +4,7 @@ package com.thanglequoc.aqicalculator;
  * Object to map to json file, contain an index and it corresponding category
  * and message
  *
- * @author ThangLeQuoc
+ * @author thanglequoc
  */
 
 class GeneralAQIInformation {

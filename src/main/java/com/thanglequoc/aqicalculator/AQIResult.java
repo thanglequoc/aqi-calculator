@@ -5,7 +5,7 @@ package com.thanglequoc.aqicalculator;
  * the<b>index</b> value, <b>category</b>, <b>health effects statements</b> and
  * <b>cautionary statements</b>,
  *
- * @author ThangLeQuoc
+ * @author thanglequoc
  */
 public class AQIResult {
     

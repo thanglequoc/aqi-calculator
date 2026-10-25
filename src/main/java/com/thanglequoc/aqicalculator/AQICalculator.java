@@ -10,8 +10,8 @@ import java.util.Optional;
  * To use the <i>AQICalculator</i> object, get its instance by calling
  * <code>getAQICalculatorInstance() </code> method directly
  *
- * @author ThangLeQuoc
- * @see <a href="https://github.com/ThangLeQuoc/aqi-calculator"> AQI Calculator Documentation</a>
+ * @author thanglequoc
+ * @see <a href="https://github.com/thanglequoc/aqi-calculator"> AQI Calculator Documentation</a>
  */
 
 public class AQICalculator {
@@ -133,7 +133,7 @@ public class AQICalculator {
      * @param data      the average concentration at the hours. The first value in the array is the avg value in the current hour, and the upcoming element in the array represent one step hour before current hour.
      * If the hour doesn't have data, replace missing data in the hour with -1.
      * @return the NowCast AQI result. The concentration in AQIResult is the NowCast concentration.
-     * @see <a href="https://github.com/ThangLeQuoc/aqi-calculator"> AQI Calculator Documentation</a> for example of usage
+     * @see <a href="https://github.com/thanglequoc/aqi-calculator"> AQI Calculator Documentation</a> for example of usage
      */
     public AQIResult getNowCastAQI(Pollutant pollutant, double[] data) {
         pollutantBreakpoint = this.pollutantsBreakpoint.getBreakpointOfPollutant(pollutant);
