@@ -55,6 +55,38 @@ jobs:
             exit 1
           fi
 
+      - name: Validate Sonatype credentials
+        env:
+          SONATYPE_USERNAME: ${{ secrets.SONATYPE_USERNAME }}
+          SONATYPE_PASSWORD: ${{ secrets.SONATYPE_PASSWORD }}
+          RELEASE_VERSION: ${{ inputs.version }}
+        run: |
+          set -euo pipefail
+
+          if [[ -z "$SONATYPE_USERNAME" || -z "$SONATYPE_PASSWORD" ]]; then
+            echo "::error::SONATYPE_USERNAME and SONATYPE_PASSWORD must be set."
+            exit 1
+          fi
+
+          TOKEN=$(printf '%s:%s' "$SONATYPE_USERNAME" "$SONATYPE_PASSWORD" | base64 | tr -d '\n')
+          URL="https://central.sonatype.com/api/v1/publisher/published?namespace=io.github.thanglequoc&name=aqi-calculator&version=${RELEASE_VERSION}"
+
+          STATUS=$(curl -sS -o /tmp/sonatype-check.json -w '%{http_code}' \
+            -H "Authorization: Bearer $TOKEN" "$URL" || true)
+
+          echo "Central Portal credential check returned HTTP $STATUS"
+
+          if [[ "$STATUS" == "401" || "$STATUS" == "403" ]]; then
+            cat /tmp/sonatype-check.json || true
+            echo "::error::Central Portal rejected the credentials. Use the user token username/password from https://central.sonatype.com/usertoken."
+            exit 1
+          fi
+
+          if [[ "$STATUS" == "000" ]]; then
+            echo "::error::Could not reach the Central Portal API."
+            exit 1
+          fi
+
       - name: Build and test
         run: ./mvnw -B clean verify
 
