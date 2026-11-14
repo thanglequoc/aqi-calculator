@@ -223,11 +223,16 @@ deploy:
       sonatype:
         active: RELEASE
         url: https://central.sonatype.com/api/v1/publisher
-        authorization: BEARER
         sign: true
         stagingRepositories:
           - target/staging-deploy
 ```
+
+Do **not** set `authorization: BEARER` in `jreleaser.yml` when the workflow supplies a
+Central Portal token username/password pair. In that mode JReleaser treats the password
+as an already-encoded bearer token and sends it unchanged. Leaving `authorization`
+unset lets JReleaser build the correct `Bearer <base64(username:password)>` token from
+`JRELEASER_MAVENCENTRAL_SONATYPE_USERNAME` and `JRELEASER_MAVENCENTRAL_SONATYPE_PASSWORD`.
 
 Both `signing.active` and `signing.pgp.active` must be enabled. Setting only `signing.active` is not enough to enable the PGP signer.
 
@@ -259,7 +264,22 @@ If the project later needs a multi-module build or custom build logic, a Gradle 
 
 - Use the Central Portal **user token**, not your normal Sonatype password.
 - Confirm both `SONATYPE_USERNAME` and `SONATYPE_PASSWORD` are set.
+- Do not set `authorization: BEARER` in `jreleaser.yml` when using the token
+  username/password pair. With that setting JReleaser sends the raw password as the
+  bearer token instead of `Bearer <base64(username:password)>`.
 - Regenerate the token if it has expired.
+
+You can verify the token pair independently:
+
+```bash
+TOKEN=$(printf '%s:%s' "$SONATYPE_USERNAME" "$SONATYPE_PASSWORD" | base64 | tr -d '\n')
+curl -i \
+  -H "Authorization: Bearer $TOKEN" \
+  "https://central.sonatype.com/api/v1/publisher/published?namespace=io.github.thanglequoc&name=aqi-calculator&version=1.3.3"
+```
+
+A `401` here means the token username/password is wrong, expired, or belongs to a
+different Sonatype account.
 
 ### `Key not found on key server`
 
