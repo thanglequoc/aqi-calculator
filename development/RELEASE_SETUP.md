@@ -20,11 +20,13 @@ Pull request
 Release (manual workflow)
   └─ .github/workflows/release.yml
        1. validate that master's POM version equals the requested version
-       2. ./mvnw -B clean verify
-       3. ./mvnw -B -Ppublication -DskipTests
+       2. validate the Sonatype token pair against the Central Portal API
+       3. ./mvnw -B clean verify
+       4. ./mvnw -B -Ppublication -DskipTests
             └─ stages artifacts under target/staging-deploy
-       4. ./mvnw -B jreleaser:config
-       5. ./mvnw -B jreleaser:full-release
+       5. ./mvnw -B jreleaser:config
+            └─ output is redirected; it is not printed to the job log
+       6. ./mvnw -B jreleaser:full-release
             ├─ signs the staged artifacts with PGP
             ├─ deploys to the Sonatype Central Publisher Portal
             └─ creates the GitHub release for tag v<version>
@@ -107,12 +109,6 @@ gpg --keyserver keyserver.ubuntu.com --recv-keys <KEY_ID>
 
 Go to **Settings → Secrets and variables → Actions**.
 
-**Variables:**
-
-| Name | Value |
-|---|---|
-| `GPG_PUBLIC_KEY` | Full ASCII-armored public key, including the BEGIN/END lines |
-
 **Secrets:**
 
 | Name | Value |
@@ -122,7 +118,14 @@ Go to **Settings → Secrets and variables → Actions**.
 | `SONATYPE_USERNAME` | Sonatype user token username |
 | `SONATYPE_PASSWORD` | Sonatype user token password |
 
+No repository **variables** are required. JReleaser derives the public key from the
+secret key, so do not add a `GPG_PUBLIC_KEY` variable.
+
 `GITHUB_TOKEN` is provided automatically by Actions. The release workflow requests `contents: write` so JReleaser can create the GitHub release.
+
+The workflow passes these values only through step environments. It does not echo
+them, suppresses the JReleaser configuration dump, and excludes
+`target/jreleaser/trace.log` from uploaded artifacts.
 
 ### 5. Workflow permissions
 
@@ -143,9 +146,11 @@ The workflow:
 - refuses to run from any branch other than `master`;
 - refuses a `SNAPSHOT` version;
 - checks that the requested version matches the committed POM version;
+- validates the Sonatype token pair against the Central Portal API and fails fast on
+  `401`/`403`;
 - runs the full test suite on Java 17;
 - stages the main JAR, sources JAR, Javadoc JAR, and POM under `target/staging-deploy`;
-- validates the JReleaser configuration;
+- validates the JReleaser configuration without printing the configuration dump;
 - signs and deploys the artifacts;
 - creates the GitHub release and tag `v<version>`.
 
@@ -180,14 +185,17 @@ target/staging-deploy/io/github/thanglequoc/aqi-calculator/<version>/
 Validate the JReleaser configuration without publishing:
 
 ```bash
-export JRELEASER_GPG_PUBLIC_KEY="$(cat public_key.asc)"
 export JRELEASER_GPG_SECRET_KEY="$(cat secret_key.asc)"
 export JRELEASER_GPG_PASSPHRASE="<passphrase>"
 export JRELEASER_MAVENCENTRAL_SONATYPE_USERNAME="<token-username>"
 export JRELEASER_MAVENCENTRAL_SONATYPE_PASSWORD="<token-password>"
 
-./mvnw -B jreleaser:config
+./mvnw -B jreleaser:config > /tmp/jreleaser-config.log 2>&1 \
+  && echo "JReleaser configuration is valid."
 ```
+
+Redirecting the output avoids printing the configuration to your terminal. If the
+command fails, inspect `/tmp/jreleaser-config.log`; JReleaser masks credential fields.
 
 Only run `./mvnw -B jreleaser:full-release` locally if you actually intend to publish.
 
@@ -223,11 +231,16 @@ deploy:
       sonatype:
         active: RELEASE
         url: https://central.sonatype.com/api/v1/publisher
-        authorization: BEARER
         sign: true
         stagingRepositories:
           - target/staging-deploy
 ```
+
+Do **not** set `authorization: BEARER` in `jreleaser.yml` when the workflow supplies a
+Central Portal token username/password pair. In that mode JReleaser treats the password
+as an already-encoded bearer token and sends it unchanged. Leaving `authorization`
+unset lets JReleaser build the correct `Bearer <base64(username:password)>` token from
+`JRELEASER_MAVENCENTRAL_SONATYPE_USERNAME` and `JRELEASER_MAVENCENTRAL_SONATYPE_PASSWORD`.
 
 Both `signing.active` and `signing.pgp.active` must be enabled. Setting only `signing.active` is not enough to enable the PGP signer.
 
@@ -259,7 +272,22 @@ If the project later needs a multi-module build or custom build logic, a Gradle 
 
 - Use the Central Portal **user token**, not your normal Sonatype password.
 - Confirm both `SONATYPE_USERNAME` and `SONATYPE_PASSWORD` are set.
+- Do not set `authorization: BEARER` in `jreleaser.yml` when using the token
+  username/password pair. With that setting JReleaser sends the raw password as the
+  bearer token instead of `Bearer <base64(username:password)>`.
 - Regenerate the token if it has expired.
+
+You can verify the token pair independently:
+
+```bash
+TOKEN=$(printf '%s:%s' "$SONATYPE_USERNAME" "$SONATYPE_PASSWORD" | base64 | tr -d '\n')
+curl -i \
+  -H "Authorization: Bearer $TOKEN" \
+  "https://central.sonatype.com/api/v1/publisher/published?namespace=io.github.thanglequoc&name=aqi-calculator&version=1.3.3"
+```
+
+A `401` here means the token username/password is wrong, expired, or belongs to a
+different Sonatype account.
 
 ### `Key not found on key server`
 
@@ -282,6 +310,11 @@ If the project later needs a multi-module build or custom build logic, a Gradle 
 - Use a dedicated release key, not a personal signing key.
 - Prefer a passphrase-protected key; store the passphrase in `GPG_PASSPHRASE`.
 - Rotate the Sonatype token and GPG key if either is exposed.
+- The workflow passes credentials only through step `env:` blocks and never echoes
+  them. GitHub Actions masks secret values in the log.
+- The JReleaser configuration step redirects its output instead of printing the
+  configuration dump.
+- Uploaded release artifacts exclude `target/jreleaser/trace.log`.
 - Consider adding a GitHub **environment** named `release` with required reviewers, and add `environment: release` to the release job for an approval gate.
 - The release workflow only runs on `workflow_dispatch`; there is no tag-push trigger, so a normal push cannot publish.
 

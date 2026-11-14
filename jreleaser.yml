@@ -27,9 +27,12 @@ deploy:
       sonatype:
         active: RELEASE
         url: https://central.sonatype.com/api/v1/publisher
-        username: ${SONATYPE_USERNAME}
-        password: ${SONATYPE_PASSWORD}
-        authorization: BEARER
+        # Credentials are supplied by the release workflow through
+        # JRELEASER_MAVENCENTRAL_SONATYPE_USERNAME and
+        # JRELEASER_MAVENCENTRAL_SONATYPE_PASSWORD. Do not set
+        # `authorization: BEARER` here: JReleaser would send the raw password
+        # as the bearer token instead of building the Central Portal token
+        # from the token username/password pair.
         sign: true
         stagingRepositories:
           - target/staging-deploy
