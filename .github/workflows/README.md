@@ -24,15 +24,18 @@ The workflow validates the committed POM version, builds and tests, stages artif
 
 ## Required repository configuration
 
-**Variables** (Settings → Secrets and variables → Actions → Variables):
-
-- `GPG_PUBLIC_KEY` — ASCII-armored GPG public key
-
-**Secrets**:
+**Secrets** (Settings → Secrets and variables → Actions → Secrets):
 
 - `GPG_SECRET_KEY` — ASCII-armored GPG secret key
 - `GPG_PASSPHRASE` — GPG key passphrase (may be empty only if the key has no passphrase)
 - `SONATYPE_USERNAME` — Sonatype Central Portal user token username
 - `SONATYPE_PASSWORD` — Sonatype Central Portal user token password
+
+`GITHUB_TOKEN` is provided automatically by Actions. No repository variables are
+required.
+
+The workflow only passes these values through step environments. It does not echo
+them, and the JReleaser configuration output is suppressed so credential fields are
+not printed in the job log. Release artifacts exclude `target/jreleaser/trace.log`.
 
 Never commit GPG secret keys or Sonatype credentials to the repository.
